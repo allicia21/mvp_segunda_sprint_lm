@@ -2,13 +2,12 @@ import os
 from flask_openapi3 import OpenAPI, Info, Tag
 from flask import jsonify, redirect, request, send_from_directory
 from urllib.parse import unquote
-#from sqlalchemy.exc import IntegrityError
 from model.pipeline import Pipeline
 from model.preprocessador import PreProcessador
 from model.cliente import Cliente
 from model._init_ import Session
 from flask_cors import CORS
-from schemas.cliente_schema import ClienteDeleteSchema, ClienteSchema, ClienteViewSchema, apresenta_clientes, apresenta_cliente
+from schemas.cliente_schema import ClienteDeleteSchema, ClienteSchema, ClienteViewSchema, ListaClientesSchema, apresenta_clientes, apresenta_cliente
 from schemas.erro_schema import ErrorSchema
 import logging
 
@@ -138,7 +137,7 @@ def predict():
 @app.get(
     "/clientes",
     tags=[cliente_tag],
-    responses={"200": ClienteViewSchema, "404": ErrorSchema},
+    responses={"200": ListaClientesSchema, "404": ErrorSchema},
 )
 def get_clientes():
     """Lista todos os clientes cadastrados na base
