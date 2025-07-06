@@ -10,7 +10,8 @@ const getList = async () => {
   })
     .then((response) => response.json())
     .then((data) => {
-      data.cliente.forEach(item => insertList(
+      console.log('Resposta completa da API:', data);
+      data.clientes.forEach(item => insertList(
         item.person_age,
         item.person_gender,
         item.person_education,
@@ -105,17 +106,32 @@ const removeElement = () => {
   Função para deletar um item da lista do servidor via requisição DELETE
   --------------------------------------------------------------------------------------
 */
-const deleteItem = (item) => {
-  console.log(item)
-  let url = 'http://127.0.0.1:5000/cliente?name=' + item;
-  fetch(url, {
-    method: 'delete'
+
+
+const deleteItem = (cliente) => {
+  console.log('Deletando ID:', cliente.id);  // <-- aqui mostra o ID correto
+
+  fetch('http://127.0.0.1:5000/cliente', {
+    method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ id: cliente.id })  // <-- manda o id do cliente certo
   })
-    .then((response) => response.json())
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error('Erro ao deletar cliente');
+      }
+      return response.json();
+    })
+    .then((data) => {
+      console.log('Cliente deletado com sucesso:', data);
+    })
     .catch((error) => {
-      console.error('Error:', error);
+      console.error('Erro ao deletar cliente:', error);
     });
 }
+
 
 /*
   --------------------------------------------------------------------------------------
@@ -189,13 +205,13 @@ if (
   // Montar objeto JSON para enviar via POST
   const data = {
     person_age: Number(person_age),
-    person_gender: person_gender,               // string
-    person_education: person_education,         // string
+    person_gender: person_gender,               
+    person_education: person_education,        
     person_income: Number(person_income),
     person_emp_exp: Number(person_emp_exp),
-    person_home_ownership: person_home_ownership, // string
+    person_home_ownership: person_home_ownership, 
     loan_amnt: Number(loan_amnt),
-    loan_intent: loan_intent,                   // string
+    loan_intent: loan_intent,                   
     loan_int_rate: Number(loan_int_rate),
     loan_percent_income: Number(loan_percent_income),
     cb_person_cred_hist_length: Number(cb_person_cred_hist_length),
@@ -238,7 +254,7 @@ if (
 
     await refreshList();
 
-    const situacao = result.loan_status === 1 ? "Aprovado" : "NÃO Aprovado";
+    const situacao = result.loan_status === 1 ? "Aprovado" : "Não Aprovado";
     alert(`Cliente adicionado com sucesso!\nDiagnóstico: ${situacao}`);
 
     document.querySelector(".items").scrollIntoView({
@@ -273,14 +289,9 @@ const insertList = (age, gender, education, person_income, person_emp_exp,
   }
 
   // Insere a célula do diagnóstico com styling
- // var diagnosticCell = row.insertCell(item.length);
-  //const diagnosticText = outcome === 1 ? "Aprovado" : "Não Aprovado";
-  //diagnosticCell.textContent = diagnosticText;
-
+  var diagnosticCell = row.insertCell(item.length);
   const diagnosticText = loan_status === 1 ? "Aprovado" : "Não Aprovado";
   diagnosticCell.textContent = diagnosticText;
-  diagnosticCell.className = loan_status === 1 ? "diagnostic-positive" : "diagnostic-negative";
-
 
   // Aplica styling baseado no diagnóstico
   if (loan_status === 1) {

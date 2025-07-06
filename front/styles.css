@@ -327,13 +327,13 @@ tr:hover {
 /* Diagnostic styling */
 .diagnostic-positive {
     background-color: #ffebee !important;
-    color: #c62828;
+    color: #2e7d32;
     font-weight: bold;
 }
 
 .diagnostic-negative {
     background-color: #e8f5e8 !important;
-    color: #2e7d32;
+    color: #c62828;
     font-weight: bold;
 }
 

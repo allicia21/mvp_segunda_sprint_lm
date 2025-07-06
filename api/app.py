@@ -155,15 +155,25 @@ def get_clientes():
         logger.debug(f"{len(clientes)} clientes encontrados")
         return apresenta_clientes(clientes), 200
 
+
+# Rota de DELETE de cliente por ID
 @app.delete('/cliente', tags=[cliente_tag],
             responses={'200': ClienteDeleteSchema, '404': ErrorSchema}, methods=['DELETE'])
 def del_cliente(query: ClienteDeleteSchema):
     """
     Exclui um cliente pelo ID.
-    """
+ 
+       """
+    cliente_id = query.id
+    print("ID recebido:", cliente_id)
+
+    if cliente_id is None:
+        return jsonify({"message": "ID inválido"}), 400
+    
     with Session() as session:
         cliente_id = query.id
         cliente = session.query(Cliente).get(cliente_id)
+    print('ID recebido para deletar:', query.id)
 
     if cliente:        
         session.delete(cliente)
