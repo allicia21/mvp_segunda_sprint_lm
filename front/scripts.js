@@ -12,6 +12,7 @@ const getList = async () => {
     .then((data) => {
       console.log('Resposta completa da API:', data);
       data.clientes.forEach(item => insertList(
+        item.id,
         item.person_age,
         item.person_gender,
         item.person_education,
@@ -91,10 +92,11 @@ const removeElement = () => {
   for (i = 0; i < close.length; i++) {
     close[i].onclick = function () {
       let div = this.parentElement.parentElement;
-      const nomeItem = div.getElementsByTagName('td')[0].innerHTML
+      const clienteId = Number(div.getAttribute("data-id"));
+      deleteItem(clienteId);
       if (confirm("Você tem certeza?")) {
         div.remove()
-        deleteItem(nomeItem)
+        deleteItem(clienteId)
         alert("Removido!")
       }
     }
@@ -108,16 +110,14 @@ const removeElement = () => {
 */
 
 
-const deleteItem = (cliente) => {
-  console.log('Deletando ID:', cliente.id);  // <-- aqui mostra o ID correto
-
+const deleteItem = (clienteId) => {
+  console.log('Deletando ID:', clienteId);
   fetch('http://127.0.0.1:5000/cliente', {
     method: 'DELETE',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({ id: cliente.id })  // <-- manda o id do cliente certo
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ id: clienteId })
   })
+
     .then((response) => {
       if (!response.ok) {
         throw new Error('Erro ao deletar cliente');
@@ -166,52 +166,52 @@ const newItem = async (event) => {
   }
 
   // Campos que devem ser numéricos
-const numericFields = [
-  person_age,
-  person_income,
-  person_emp_exp,
-  loan_amnt,
-  loan_int_rate,
-  loan_percent_income,
-  cb_person_cred_hist_length,
-  credit_score,
-  previous_loan_defaults_on_file
-];
+  const numericFields = [
+    person_age,
+    person_income,
+    person_emp_exp,
+    loan_amnt,
+    loan_int_rate,
+    loan_percent_income,
+    cb_person_cred_hist_length,
+    credit_score,
+    previous_loan_defaults_on_file
+  ];
 
-// Verifica se algum campo numérico está vazio
-if (
-  numericFields.some(field => field === "")
-) {
-  alert("Preencha todos os campos numéricos.");
-  return;
-}
+  // Verifica se algum campo numérico está vazio
+  if (
+    numericFields.some(field => field === "")
+  ) {
+    alert("Preencha todos os campos numéricos.");
+    return;
+  }
 
-// Verifica se algum campo numérico não é número
-if (
-  numericFields.some(field => isNaN(field))
-) {
-  alert("Alguns campos numéricos contêm valores inválidos.");
-  return;
-}
+  // Verifica se algum campo numérico não é número
+  if (
+    numericFields.some(field => isNaN(field))
+  ) {
+    alert("Alguns campos numéricos contêm valores inválidos.");
+    return;
+  }
 
-// Verifica se campos string obrigatórios foram preenchidos
-if (
-  !person_gender || !person_education || !person_home_ownership || !loan_intent
-) {
-  alert("Preencha todos os campos de seleção (gênero, escolaridade, moradia e intenção).");
-  return;
-}
+  // Verifica se campos string obrigatórios foram preenchidos
+  if (
+    !person_gender || !person_education || !person_home_ownership || !loan_intent
+  ) {
+    alert("Preencha todos os campos de seleção (gênero, escolaridade, moradia e intenção).");
+    return;
+  }
 
   // Montar objeto JSON para enviar via POST
   const data = {
     person_age: Number(person_age),
-    person_gender: person_gender,               
-    person_education: person_education,        
+    person_gender: person_gender,
+    person_education: person_education,
     person_income: Number(person_income),
     person_emp_exp: Number(person_emp_exp),
-    person_home_ownership: person_home_ownership, 
+    person_home_ownership: person_home_ownership,
     loan_amnt: Number(loan_amnt),
-    loan_intent: loan_intent,                   
+    loan_intent: loan_intent,
     loan_int_rate: Number(loan_int_rate),
     loan_percent_income: Number(loan_percent_income),
     cb_person_cred_hist_length: Number(cb_person_cred_hist_length),
@@ -255,7 +255,7 @@ if (
     await refreshList();
 
     const situacao = result.loan_status === 1 ? "Aprovado" : "Não Aprovado";
-    alert(`Cliente adicionado com sucesso!\nDiagnóstico: ${situacao}`);
+    alert(`Cliente adicionado com sucesso!\nSituação: ${situacao}`);
 
     document.querySelector(".items").scrollIntoView({
       behavior: "smooth",
@@ -274,35 +274,34 @@ if (
   Função para inserir items na lista apresentada
   --------------------------------------------------------------------------------------
 */
-const insertList = (age, gender, education, person_income, person_emp_exp,
-  person_home_ownership, loan_amnt, loan_intent, loan_int_rate, loan_percent_income,
-  cb_person_cred_hist_length, credit_score, previous_loan_defaults_on_file, loan_status) => {
-  var item = [age, gender, education, person_income, person_emp_exp, person_home_ownership, loan_amnt,
-    loan_intent, loan_int_rate,loan_percent_income,cb_person_cred_hist_length,credit_score,previous_loan_defaults_on_file,loan_status];
+const insertList = (
+  id,
+  age, gender, education, income, exp, home, loan,
+  intent, rate, percent, cred_length, score, prev_loans, status
+) => {
+  var item = [age, gender, education, income, exp, home, loan,
+    intent, rate, percent, cred_length, score, prev_loans, status];
+
   var table = document.getElementById('myTable');
   var row = table.insertRow();
 
-  // Insere as células com os dados do paciente
+  // Salvar o ID real no atributo data-id da linha
+  row.setAttribute("data-id", id);
+
   for (var i = 0; i < item.length; i++) {
     var cell = row.insertCell(i);
     cell.textContent = item[i];
   }
 
-  // Insere a célula do diagnóstico com styling
+  // Diagnóstico
   var diagnosticCell = row.insertCell(item.length);
-  const diagnosticText = loan_status === 1 ? "Aprovado" : "Não Aprovado";
+  const diagnosticText = status === 1 ? "Aprovado" : "Não Aprovado";
   diagnosticCell.textContent = diagnosticText;
+  diagnosticCell.className = status === 1 ? "diagnostic-positive" : "diagnostic-negative";
 
-  // Aplica styling baseado no diagnóstico
-  if (loan_status === 1) {
-    diagnosticCell.className = "diagnostic-positive";
-  } else {
-    diagnosticCell.className = "diagnostic-negative";
-  }
-
-  // Insere o botão de deletar
+  // Botão de deletar
   var deleteCell = row.insertCell(-1);
   insertDeleteButton(deleteCell);
 
-  removeElement();
+  removeElement();  // importante manter
 }

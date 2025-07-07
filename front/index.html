@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="/front/styles.css" />
 
     <title>Cliente - Avaliação de Empréstimo</title>
-    <link rel="icon" href="/front/img/home_logo.jpeg" type="image/png" />
+    <link rel="icon" href="/front/img/emprestimo.jpg" type="image/png" />
 </head>
 
 <body>
@@ -18,58 +18,67 @@
         <div class="title">
             <h2>Cadastro de Cliente para Avaliação de Empréstimo</h2>
             <br />
-            <p>Preencha os dados do cliente e clique em "Diagnosticar".</p>
+            <p>Preencha os dados do cliente e clique em "Verificar".</p>
         </div>
     </header>
 
     <section class="newItem">
-    <input type="number" id="person_age" placeholder="Idade" class="input" />
+        <div class="form-section">
+            <h3>Informações Pessoais</h3>
+            <input type="number" id="person_age" placeholder="Idade" class="input" />
+            <select id="person_gender" class="input">
+                <option value="" disabled selected>Gênero</option>
+                <option value="Male">Masculino</option>
+                <option value="Female">Feminino</option>
+            </select>
+            <select id="person_education" class="input">
+                <option value="" disabled selected>Escolaridade</option>
+                <option value="High School">Ensino Médio</option>
+                <option value="College">Faculdade</option>
+                <option value="Graduate">Pós-graduação</option>
+                <option value="PhD">Doutorado</option>
+            </select>
+            <input type="number" id="person_income" placeholder="Renda Mensal" class="input" />
+            <input type="number" id="person_emp_exp" placeholder="Anos de Experiência" class="input" />
+            <select id="person_home_ownership" class="input">
+                <option value="" disabled selected>Tipo de Moradia</option>
+                <option value="Rent">Alugado</option>
+                <option value="Own">Próprio</option>
+                <option value="Mortgage">Hipotecado</option>
+                <option value="Other">Outro</option>
+            </select>
+        </div>
 
-    <select id="person_gender" class="input">
-        <option value="" disabled selected>Gênero</option>
-        <option value="Male">Masculino</option>
-        <option value="Female">Feminino</option>
-    </select>
+        <div class="form-section">
+            <h3>Detalhes do Empréstimo</h3>
+            <input type="number" id="loan_amnt" placeholder="Valor do Empréstimo" class="input" />
+            <select id="loan_intent" class="input">
+                <option value="" disabled selected>Intenção do Empréstimo</option>
+                <option value="Education">Educação</option>
+                <option value="Medical">Saúde</option>
+                <option value="Venture">Negócio</option>
+                <option value="Personal">Pessoal</option>
+                <option value="Home Improvement">Reforma</option>
+                <option value="Debt Consolidation">Consolidação de Dívidas</option>
+            </select>
+            <input type="number" id="loan_int_rate" placeholder="Taxa de Juros (%)" class="input" />
+            <input type="number" id="loan_percent_income" placeholder="Percentual da Renda (%)" class="input" />
+        </div>
 
-    <select id="person_education" class="input">
-        <option value="" disabled selected>Escolaridade</option>
-        <option value="High School">Ensino Médio</option>
-        <option value="College">Faculdade</option>
-        <option value="Graduate">Pós-graduação</option>
-        <option value="PhD">Doutorado</option>
-    </select>
+        <div class="form-section">
+            <h3>Histórico de Crédito</h3>
+            <input type="number" id="cb_person_cred_hist_length" placeholder="Duração do Crédito (meses)"
+                class="input" />
+            <input type="number" id="credit_score" placeholder="Pontuação de Crédito" class="input" />
+            <input type="number" id="previous_loan_defaults_on_file" placeholder="Empréstimos Anteriores"
+                class="input" />
+        </div>
 
-    <input type="number" id="person_income" placeholder="Renda Mensal" class="input" />
-    <input type="number" id="person_emp_exp" placeholder="Anos de Experiência" class="input" />
+        <div class="form-section full-width">
+            <button type="button" onclick="newItem(event)" class="addBtn">Verificar</button>
+        </div>
+    </section>
 
-    <select id="person_home_ownership" class="input">
-        <option value="" disabled selected>Tipo de Moradia</option>
-        <option value="Rent">Alugado</option>
-        <option value="Own">Próprio</option>
-        <option value="Mortgage">Hipotecado</option>
-        <option value="Other">Outro</option>
-    </select>
-
-    <input type="number" id="loan_amnt" placeholder="Valor do Empréstimo" class="input" />
-
-    <select id="loan_intent" class="input">
-        <option value="" disabled selected>Intenção do Empréstimo</option>
-        <option value="Education">Educação</option>
-        <option value="Medical">Saúde</option>
-        <option value="Venture">Negócio</option>
-        <option value="Personal">Pessoal</option>
-        <option value="Home Improvement">Reforma</option>
-        <option value="Debt Consolidation">Consolidação de Dívidas</option>
-    </select>
-
-    <input type="number" id="loan_int_rate" placeholder="Taxa de Juros (%)" class="input" />
-    <input type="number" id="loan_percent_income" placeholder="Percentual da Renda (%)" class="input" />
-    <input type="number" id="cb_person_cred_hist_length" placeholder="Duração do Crédito (meses)" class="input" />
-    <input type="number" id="credit_score" placeholder="Pontuação de Crédito" class="input" />
-    <input type="number" id="previous_loan_defaults_on_file" placeholder="Empréstimos Anteriores" class="input" />
-
-    <button type="button" onclick="newItem(event)" class="addBtn">Diagnosticar</button>
-</section>
 
     <section class="items">
         <div class="table-container">
