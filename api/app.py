@@ -158,25 +158,25 @@ def get_clientes():
 
 # Rota de DELETE de cliente por ID
 @app.delete('/cliente', tags=[cliente_tag],
-            responses={'200': ClienteDeleteSchema, '404': ErrorSchema}, methods=['DELETE'])
-def del_cliente(query: ClienteDeleteSchema):
-    """
-    Exclui um cliente pelo ID.
- 
-       """
-    cliente_id = query.id
+            responses={'200': ClienteDeleteSchema, '404': ErrorSchema})
+def del_cliente():
+    data = request.get_json()
+    cliente_id = data.get("id")
+
+    print("Raw data:", request.data)
+
     print("ID recebido:", cliente_id)
 
     if cliente_id is None:
         return jsonify({"message": "ID inválido"}), 400
-    
-    with Session() as session:
-        cliente_id = query.id
-        cliente = session.query(Cliente).get(cliente_id)
-    print('ID recebido para deletar:', query.id)
 
-    if cliente:        
-        session.delete(cliente)
-        session.commit()
-        return jsonify({"message": "Cliente removido", "id": cliente_id})
-    return jsonify({"message": "Cliente não encontrado"}, 404)
+    with Session() as session:
+        cliente = session.query(Cliente).get(cliente_id)
+        print('Cliente encontrado:', cliente)
+
+        if cliente:
+            session.delete(cliente)
+            session.commit()
+            return jsonify({"message": "Cliente removido", "id": cliente_id}), 200
+
+    return jsonify({"message": "Cliente não encontrado"}), 404
