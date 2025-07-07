@@ -10,6 +10,8 @@ from flask_cors import CORS
 from schemas.cliente_schema import ClienteDeleteSchema, ClienteSchema, ClienteViewSchema, ListaClientesSchema, apresenta_clientes, apresenta_cliente
 from schemas.erro_schema import ErrorSchema
 import logging
+import pandas as pd
+
 
 logging.basicConfig(level=logging.INFO)
 
@@ -49,7 +51,6 @@ def docs():
 
 logger = logging.getLogger(__name__)
 
-import pandas as pd
 
 @app.post(
     "/cliente",
